@@ -38,6 +38,10 @@ public class Casa {
         return cant;
     }
 
+    public ArrayList<Estudiante> getListadoEstudiantes(){
+        return this.estudiantes;
+    }
+
     public int cantidadEstudiantesMasculinos(){
         return this.estudiantes.size();
     }

@@ -24,8 +24,40 @@ public class Estudiante {
     public Estudiante getEstudiante(){
         return this;
     }
+
+
+    //String sqlCrearTablaEstudiantes = "CREATE TABLE IF NOT EXISTS
+    // Estudiantes (
+    // numero INTEGER PRIMARY KEY
+    // , nombre TEXT,
+    // genero TEXT,
+    // trabajo TEXT,
+    // idCasa INTEGER,
+    // especie TEXT,
+    // status TEXT,
+    // FOREIGN KEY (idCasa) REFERENCES Casas(id));";
+
+    public int getNumero(){
+        return this.numero;
+    }
+    public String getNombre(){
+        return this.nombre;
+    }
+    public char getGenero(){
+        return this.genero;
+    }
+    public String getTrabajo(){
+        return this.trabajo;
+    }
+    public int getIdCasa(){
+        return this.idCasa;
+    }
     public String getEspecie(){
         return this.especie;
     }
+    public String getStatus(){
+        return this.status;
+    }
+
 
 }

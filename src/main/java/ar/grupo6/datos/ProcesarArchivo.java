@@ -1,4 +1,6 @@
 package ar.grupo6.datos;
+import ar.grupo6.bd.ConexionSQLite;
+import ar.grupo6.bd.GestionarDatosSQL;
 import ar.grupo6.clases.Estudiante;
 import ar.grupo6.clases.Casa;
 
@@ -6,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +22,12 @@ public class ProcesarArchivo {
     Casa Slytherin;
     Casa Hufflepuff;
     Casa Ravenclaw;
-    public ProcesarArchivo(String nombreArchivo) throws IOException {
+    public ProcesarArchivo(String nombreArchivo) throws IOException, SQLException {
         this.nombreArchivo = nombreArchivo;
         this.crearCasas();
         this.leerArchivo();
+        this.cargarBD();
+
     }
     public void leerArchivo() throws IOException {
 
@@ -126,32 +132,62 @@ public class ProcesarArchivo {
     }
 
     public void getListadoEstudiantesPorCasa(){
-        int cantEstudiantesGryffindor = Gryffindor.cantidadEstudiantes();
-        int cantEstudiantesSlytherin = Slytherin.cantidadEstudiantes();
-        int cantEstudiantesHufflepuff = Hufflepuff.cantidadEstudiantes();
-        int cantEstudiantesRavenclaw = Ravenclaw.cantidadEstudiantes();
-        System.out.println("");
-        System.out.println("LISTADOS DE ESTUDIANTES POR CASA");
-        System.out.println("--------------------------------");
-        System.out.println("Gryffindor: " + cantEstudiantesGryffindor + " estudiantes.");
-        System.out.println("Slytherin: " + cantEstudiantesSlytherin + " estudiantes.");
-        System.out.println("Gryffindor: " + cantEstudiantesHufflepuff + " estudiantes.");
-        System.out.println("Gryffindor: " + cantEstudiantesRavenclaw + " estudiantes.");
+
+        this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantes(),true, "LISTADOS DE ESTUDIANTES POR CASA (desde Archivo - Clase");
+        this.printCantEstPorCasa("Slytherin",Slytherin.cantidadEstudiantes(), false,"");
+        this.printCantEstPorCasa("Hufflepuff",Hufflepuff.cantidadEstudiantes(), false,"");
+        this.printCantEstPorCasa("Ravenclaw",Ravenclaw.cantidadEstudiantes(), false,"");
+
     }
 
     public void getListadoNoHumanos(){
-        int cantEstudiantesNoHumanoGryffindor = Gryffindor.cantidadEstudiantesNoHumanos();
-        int cantEstudiantesNoHumanosSlytherin = Slytherin.cantidadEstudiantesNoHumanos();
-        int cantEstudiantesNoHumanosHufflepuff = Hufflepuff.cantidadEstudiantesNoHumanos();
-        int cantEstudiantesNoHumanosRavenclaw = Ravenclaw.cantidadEstudiantesNoHumanos();
-        System.out.println("");
-        System.out.println("LISTADOS DE CANTIDAD DE NO HUMANOS POR CASA");
-        System.out.println("------------------------------------------");
-        System.out.println("Gryffindor: " + cantEstudiantesNoHumanoGryffindor + " estudiantes.");
-        System.out.println("Slytherin: " + cantEstudiantesNoHumanosSlytherin + " estudiantes.");
-        System.out.println("Gryffindor: " + cantEstudiantesNoHumanosHufflepuff + " estudiantes.");
-        System.out.println("Gryffindor: " + cantEstudiantesNoHumanosRavenclaw + " estudiantes.");
 
+        this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantesNoHumanos(),true, "LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde Archivo - Clase");
+        this.printCantEstPorCasa("Slytherin",Slytherin.cantidadEstudiantesNoHumanos(), false,"");
+        this.printCantEstPorCasa("Hufflepuff",Hufflepuff.cantidadEstudiantesNoHumanos(), false,"");
+        this.printCantEstPorCasa("Ravenclaw",Ravenclaw.cantidadEstudiantesNoHumanos(), false,"");
     }
+
+    public void cargarBD() throws SQLException {
+        GestionarDatosSQL db = new GestionarDatosSQL();
+        db.cargarCasas();
+
+        ArrayList<Estudiante> estudiantesGryffindor = Gryffindor.getListadoEstudiantes();
+        db.cargarEstudiantes(estudiantesGryffindor);
+
+        ArrayList<Estudiante> estudiantesSlytherin = Slytherin.getListadoEstudiantes();
+        db.cargarEstudiantes(estudiantesSlytherin);
+
+        ArrayList<Estudiante> estudiantesHufflepuff = Hufflepuff.getListadoEstudiantes();
+        db.cargarEstudiantes(estudiantesHufflepuff);
+
+        ArrayList<Estudiante> estudiantesRavenclaw = Ravenclaw.getListadoEstudiantes();
+        db.cargarEstudiantes(estudiantesRavenclaw);
+
+
+        this.printCantEstPorCasa("Gryffindor",db.getCantEstXCasa("Gryffindor"),true,"LISTADOS DE ESTUDIANTES POR CASA (desde BD)");
+        this.printCantEstPorCasa("Slytherin",db.getCantEstXCasa("Slytherin"),false,"");
+        this.printCantEstPorCasa("Hufflepuff",db.getCantEstXCasa("Hufflepuff"),false,"");
+        this.printCantEstPorCasa("Ravenclaw",db.getCantEstXCasa("Ravenclaw"),false,"");
+
+        this.printCantEstPorCasa("Gryffindor",db.getCantEstNoHumanXCasa("Gryffindor","Human"),true,"LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde BD)");
+        this.printCantEstPorCasa("Slytherin",db.getCantEstNoHumanXCasa("Slytherin","Human"),false,"");
+        this.printCantEstPorCasa("Hufflepuff",db.getCantEstNoHumanXCasa("Hufflepuff","Human"),false,"");
+        this.printCantEstPorCasa("Ravenclaw",db.getCantEstNoHumanXCasa("Ravenclaw","Human"),false,"");
+    }
+
+    public void printCantEstPorCasa(String nombreCasa, int cantidad, boolean titulo, String strTitulo ){
+        if(titulo) {
+            System.out.println("");
+            System.out.println(strTitulo);
+            System.out.println("------------------------------------------");
+        }
+        System.out.println(nombreCasa+": " + cantidad + " estudiantes.");
+    }
+
+
+
+
+
 
 }
