@@ -2,7 +2,7 @@
 
 Grupo 6
 
-
+-Olmos Alejandro
 - Dolores Oviedo
 - Damián Frutos
 - Fernando Paez Zanini
