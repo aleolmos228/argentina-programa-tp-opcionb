@@ -23,9 +23,13 @@ public class ProcesarArchivo {
     Casa Hufflepuff;
     Casa Ravenclaw;
     public ProcesarArchivo(String nombreArchivo) throws IOException, SQLException {
+
         this.nombreArchivo = nombreArchivo;
+
         this.crearCasas();
+
         this.leerArchivo();
+
         this.cargarBD();
 
     }
@@ -43,7 +47,8 @@ public class ProcesarArchivo {
                     linea = line.split(",");
                     //int numero, String nombre, char genero, String trabajo ,Casa casa,String especie, String status
                     //try {
-                    if(linea.length == 7) {
+
+                    if(linea[3].equals("Student")) {
                         int numero;
                         String nombre;
                         char genero;
@@ -133,7 +138,7 @@ public class ProcesarArchivo {
 
     public void getListadoEstudiantesPorCasa(){
 
-        this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantes(),true, "LISTADOS DE ESTUDIANTES POR CASA (desde Archivo - Clase");
+        this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantes(),true, "LISTADOS DE ESTUDIANTES POR CASA (desde clase archivo)");
         this.printCantEstPorCasa("Slytherin",Slytherin.cantidadEstudiantes(), false,"");
         this.printCantEstPorCasa("Hufflepuff",Hufflepuff.cantidadEstudiantes(), false,"");
         this.printCantEstPorCasa("Ravenclaw",Ravenclaw.cantidadEstudiantes(), false,"");
@@ -141,11 +146,19 @@ public class ProcesarArchivo {
     }
 
     public void getListadoNoHumanos(){
+        String str   = "\nLISTADO DE ESTUDIANTES NO HUMANOS (desde clase archivo)";
+        str   += "\n---------------------------------";
+        str += Gryffindor.listadoEstudiantesNoHumanos();
+        str += Slytherin.listadoEstudiantesNoHumanos();
+        str += Hufflepuff.listadoEstudiantesNoHumanos();
+        str += Ravenclaw.listadoEstudiantesNoHumanos();
 
-        this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantesNoHumanos(),true, "LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde Archivo - Clase");
-        this.printCantEstPorCasa("Slytherin",Slytherin.cantidadEstudiantesNoHumanos(), false,"");
-        this.printCantEstPorCasa("Hufflepuff",Hufflepuff.cantidadEstudiantesNoHumanos(), false,"");
-        this.printCantEstPorCasa("Ravenclaw",Ravenclaw.cantidadEstudiantesNoHumanos(), false,"");
+        System.out.println(str);
+
+        //this.printCantEstPorCasa("Gryffindor",Gryffindor.cantidadEstudiantesNoHumanos(),true, "LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde Archivo - Clase");
+        //this.printCantEstPorCasa("Slytherin",Slytherin.cantidadEstudiantesNoHumanos(), false,"");
+        //this.printCantEstPorCasa("Hufflepuff",Hufflepuff.cantidadEstudiantesNoHumanos(), false,"");
+        //this.printCantEstPorCasa("Ravenclaw",Ravenclaw.cantidadEstudiantesNoHumanos(), false,"");
     }
 
     public void cargarBD() throws SQLException {
@@ -170,10 +183,11 @@ public class ProcesarArchivo {
         this.printCantEstPorCasa("Hufflepuff",db.getCantEstXCasa("Hufflepuff"),false,"");
         this.printCantEstPorCasa("Ravenclaw",db.getCantEstXCasa("Ravenclaw"),false,"");
 
-        this.printCantEstPorCasa("Gryffindor",db.getCantEstNoHumanXCasa("Gryffindor","Human"),true,"LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde BD)");
-        this.printCantEstPorCasa("Slytherin",db.getCantEstNoHumanXCasa("Slytherin","Human"),false,"");
-        this.printCantEstPorCasa("Hufflepuff",db.getCantEstNoHumanXCasa("Hufflepuff","Human"),false,"");
-        this.printCantEstPorCasa("Ravenclaw",db.getCantEstNoHumanXCasa("Ravenclaw","Human"),false,"");
+        //this.printCantEstPorCasa("Gryffindor",db.getCantEstNoHumanXCasa("Gryffindor","Human"),true,"LISTADOS DE ESTUDIANTES NO HUMANOS POR CASA (desde BD)");
+        //this.printCantEstPorCasa("Slytherin",db.getCantEstNoHumanXCasa("Slytherin","Human"),false,"");
+        //this.printCantEstPorCasa("Hufflepuff",db.getCantEstNoHumanXCasa("Hufflepuff","Human"),false,"");
+        //this.printCantEstPorCasa("Ravenclaw",db.getCantEstNoHumanXCasa("Ravenclaw","Human"),false,"");
+        db.getListadoEstNoHuman();
     }
 
     public void printCantEstPorCasa(String nombreCasa, int cantidad, boolean titulo, String strTitulo ){

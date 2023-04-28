@@ -25,7 +25,7 @@ public class ConexionSQLite {
             PreparedStatement statementCrearTablaEstudiantes = conexion.prepareStatement(sqlCrearTablaEstudiantes);
             statementCrearTablaEstudiantes.executeUpdate();
 
-            System.out.println("Conexión a SQLite establecida.");
+            //System.out.println("Conexión a SQLite establecida.");
 
         } catch (SQLException e) {
             System.err.println("Error al establecer la conexión a SQLite: " + e.getMessage());

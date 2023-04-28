@@ -2,10 +2,7 @@ package ar.grupo6.bd;
 
 import ar.grupo6.clases.Estudiante;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class GestionarDatosSQL {
@@ -77,7 +74,7 @@ public class GestionarDatosSQL {
         if (!conn.isClosed()) {
             String sql = "SELECT COUNT(*) FROM casas JOIN estudiantes " +
                     "ON casas.id = estudiantes.idCasa " +
-                    "WHERE casas.nombre = ?";
+                    "WHERE casas.nombre = ? AND TRIM(estudiantes.trabajo) = 'Student'";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             //pstmt.setString(1, especie);
             pstmt.setString(1, nombreCasa);
@@ -101,6 +98,32 @@ public class GestionarDatosSQL {
             cantidad = rs.getInt(1);
         }
         return cantidad;
+    }
+
+    public void getListadoEstNoHuman() throws SQLException {
+        Statement stmt = null;
+        ResultSet rs = null;
+        String str="";
+        str   = "\nLISTADO DE ESTUDIANTES NO HUMANOS (desde bd)";
+        str   += "\n---------------------------------";
+        int cantidad = 0;
+        if (!conn.isClosed()) {
+            String sql = "SELECT estudiantes.nombre as estudiante_nombre, casas.nombre as casa_nombre " +
+                    "FROM casas JOIN estudiantes " +
+                    "ON casas.id = estudiantes.idCasa " +
+                    " WHERE estudiantes.trabajo='Student' AND TRIM(especie) != 'Human'";
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String estudianteNombre = rs.getString("estudiante_nombre");
+                String casaNombre = rs.getString("casa_nombre");
+                str += "\n* Nombre: " + estudianteNombre + " - Casa: " + casaNombre + "";
+                //System.out.println("id = " + id + ", name = " + name + ", value = " + value);
+            }
+            System.out.println(str);
+        }
+
     }
 
 }
