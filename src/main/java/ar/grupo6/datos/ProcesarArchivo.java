@@ -43,10 +43,10 @@ public class ProcesarArchivo {
         if (Files.exists(f) && Files.isReadable(f)) {
             int i = 0;
             for (String line : Files.readAllLines(f)) {
-                if (i > 0) {
+                //if (i > 0) {
                     linea = line.split(",");
-                    //int numero, String nombre, char genero, String trabajo ,Casa casa,String especie, String status
-                    //try {
+
+                    try {
 
                     if(linea[3].equals("Student")) {
                         int numero;
@@ -92,11 +92,11 @@ public class ProcesarArchivo {
                                 break;
                         }
                     }
-                    //} catch (Exception e) {
+                    } catch (Exception e) {
                     //    System.out.println(e);
-                    //}
+                    }
                     //System.out.println(e.getEstudiante());
-                }
+                //}
                 i++;
             }
 
