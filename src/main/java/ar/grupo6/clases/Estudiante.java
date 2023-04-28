@@ -10,7 +10,6 @@ public class Estudiante {
     private String especie;
     private String status;
 
-
     public Estudiante(int numero, String nombre, char genero, String trabajo ,int idCasa,String especie, String status){
         this.numero = numero;
         this.nombre = nombre;
@@ -20,23 +19,9 @@ public class Estudiante {
         this.especie = especie;
         this.status = status;
     }
-
     public Estudiante getEstudiante(){
         return this;
     }
-
-
-    //String sqlCrearTablaEstudiantes = "CREATE TABLE IF NOT EXISTS
-    // Estudiantes (
-    // numero INTEGER PRIMARY KEY
-    // , nombre TEXT,
-    // genero TEXT,
-    // trabajo TEXT,
-    // idCasa INTEGER,
-    // especie TEXT,
-    // status TEXT,
-    // FOREIGN KEY (idCasa) REFERENCES Casas(id));";
-
     public int getNumero(){
         return this.numero;
     }
