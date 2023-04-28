@@ -7,3 +7,4 @@ Grupo 6
 - Damián Frutos
 - Fernando Paez Zanini
 - Victor Sebastian Rodriguez
+-pablo catala 
